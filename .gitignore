@@ -1,0 +1,3 @@
+.vagrant/
+database/
+!database/placeholder
