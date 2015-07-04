@@ -22,19 +22,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Spin up a "host box" for use with the Docker provider
   # and then provision it with Docker
-  # the docker image we use '' is oel66, so we minimize
-	# deltas to pull by setting off oel66
-  config.vm.box = "boxcutter/oel66" 
-	
-	# Standard docker installation does not work 100%.
-	# We need to enable the addons channel before, as noted in:
-	# - https://docs.docker.com/installation/oracle/
-	# - https://blogs.oracle.com/wim/entry/configure_oracle_linux_6_3
-	# We do this using sed, cf.: http://askubuntu.com/questions/20414/find-and-replace-text-within-a-file-using-commands
-	# the [..ol6_addons] stanza usually is the first section with "enabled=0"
-	# so we just replace the first occurrence instead of all ('g')
-	config.vm.provision "shell", inline: "sudo sed -i 's/enabled=0/enabled=1/' /etc/yum.repos.d/public-yum-ol6.repo"
-
-	# NOTE: This may take long
-  config.vm.provision "docker"
+  config.vm.box = "phusion/ubuntu-14.04-amd64" 
 end
