@@ -1,0 +1,7 @@
+LISTENER =
+  (DESCRIPTION_LIST = 
+    (DESCRIPTION = 
+      (ADDRESS = (PROTOCOL = TCP) (HOST = oracle12c) (PORT = 1521))
+    )
+  )
+

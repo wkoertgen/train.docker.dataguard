@@ -1,3 +1,3 @@
 .vagrant/
-database/
-!database/.placeholder
+12c_installer/
+!12c_installer/.placeholder

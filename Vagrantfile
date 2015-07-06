@@ -30,5 +30,8 @@ Vagrant.configure(2) do |config|
 
     # Specify a friendly name for the Docker container
     d.name = 'oracle12c-container'
+
+    # NOTE: as long as we are in development
+    d.remains_running = false
   end
 end

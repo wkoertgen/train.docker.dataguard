@@ -1,4 +1,4 @@
 .git
 .vagrant
 host
-database
+12c_installer
