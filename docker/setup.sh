@@ -1,3 +1,5 @@
+# cf.: https://www.doag.org/formes/servlet/DocNavi?action=getFile&did=6939790&file=2015-03-News-Franck_Pachot-Data-virtualization-playing-with-Oracle-12c-on-Docker-containers.pdf
+
 yum -y install oracle-rdbms-server-12cR1-preinstall unzip
 
 mkdir -p /oracle/install
