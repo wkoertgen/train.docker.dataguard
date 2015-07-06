@@ -24,7 +24,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # and then provision it with Docker
   config.vm.box = "phusion/ubuntu-14.04-amd64"
 
-	# auto install docker
+  # auto install docker
   config.vm.provision "docker"
 	
 end
