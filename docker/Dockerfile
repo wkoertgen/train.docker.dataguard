@@ -3,10 +3,13 @@ FROM breed85/oracle-12c:latest
 
 # Install Oracle 12c
 
-# TODO: adjust scripts and remove hardcoded '/vagrant'
-COPY files /vagrant
+# TODO/NOTE: We assume mounting host volume here???
+#COPY *.zip setup.sh ./
+COPY setup.sh ./
 
-RUN /vagrant/scripts/setup.sh
+# TODO: adjust scripts and remove hardcoded '/vagrant'
+# TODO: Use WORKDIR here
+RUN ./setup.sh
 
 # expose TNS port
 EXPOSE 1521

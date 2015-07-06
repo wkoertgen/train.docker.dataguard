@@ -12,17 +12,18 @@ ENV['VAGRANT_DEFAULT_PROVIDER'] = 'docker'
 Vagrant.configure(2) do |config|
 
   config.vm.define "train.docker.dataguard"
-  
+
+  #config.vm.synced_folder ".", "/vagrant", disabled: true
+
   # Configure the Docker provider for Vagrant
   config.vm.provider "docker" do |d|
    
     # The standard boot2docker VM does not support synced folders on Windows.
-		# So we use a customized one that sets off oel66
     d.vagrant_vagrantfile = "host/Vagrantfile"
 
     # Specify the Docker image to use
     #d.image = "breed85/oracle-12c"
-    d.build_dir = "."    
+    d.build_dir = "./docker"
 
     # Specify port mappings
     # If omitted, no ports are mapped!
@@ -31,7 +32,7 @@ Vagrant.configure(2) do |config|
     # Specify a friendly name for the Docker container
     d.name = 'oracle12c-container'
 
-    # NOTE: as long as we are in development
-    d.remains_running = false
+    # TODO: 'vagrant' should be removed here (adjust scripts)
+    #d.volumes = ["./files:/vagrant"]
   end
 end
