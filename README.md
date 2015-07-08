@@ -17,26 +17,36 @@ If you are on Windows or want to use a proxy VM for the Docker host, additionall
     - `linuxamd64_12102_database_2of2.zip` (967.5M)
 - Place the zip archives in directory `./install/`
 
+## How to run
+
+Using native docker, simply run
+
+    docker run -it --name="oracle12c" \
+    -v $PWD/install:/tmp \
+    -w /tmp \
+    breed85/oracle-12c \
+    /bin/bash -ci ./setup.sh
+
+ Alternatively, using Vagrant, type
+
+    vagrant up
+
+and
+
+    docker logs -f oracle12c
+
+to follow the installation process.
+
+
 ## How to build
 
-1. Start a local http server in `./install` for the downloaded Oracle installation archives, e.g. using [Python](http://stackoverflow.com/questions/26692708/how-to-add-a-file-to-an-image-in-dockerfile-without-using-the-add-or-copy-direct) or
+1. Start a local http server in `./install` for the downloaded Oracle installation archives, e.g. using [Python](http://stackoverflow.com/questions/26692708/how-to-add-a-file-to-an-image-in-dockerfile-without-using-the-add-or-copy-direct)
+        python3 -m http.server --bind <address> 8000
+where `address` is your primary ip4. My primary way to get my current ip scripted is
+        ip route get 8.8.8.8 | awk '{print $NF; exit}
+2. Adjust `BASEURL` in `./docker/Dockerfile` to match your host ip.
 
-2. Modify `./docker/Dockerfile` to match your host IP. For me this is `192.168.2.111`.
-
-3. Then, on the command line type `vagrant up`
-
-###-q Notes on using Windows
-
-On Windows, there is no native Docker support. In this case, Vagrant automatically spins up a proxy VM, defaulting to [boot2docker](https://github.com/mitchellh/boot2docker-vagrant-box). However, this default VM lacks support for synced folders, except `rsync`. We therefore customized the proxy VM to [phusion/ubuntu-14.04-amd64](https://atlas.hashicorp.com/phusion/boxes/ubuntu-14.04-amd64).
-
-After docker is installed on the proxy VM you may get an error
-
-	dial unix /var/run/docker.sock: permission denied.
-	Are you trying to connect to a TLS-enabled daemon without TLS?"
-
-Just reboot the host and try again. To reboot the docker host, change into the `host` subdirectory and do a vagrant reload
-
-	cd host
-  vagrant reload
-
-If you want to you can automate the reboot using the reboot plugin as discussed in [How to Reboot a Vagrant Guest VM During Provisioning](https://www.exratione.com/2014/06/how-to-reboot-a-vagrant-guest-vm-during-provisioning/)
+3. Then, on the command line, cd into `./build` and type
+        docker build -t wkoertgen/train.docker.dataguard .
+Alternatively use Vagrant, e.g.
+        vagrant up
