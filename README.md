@@ -3,11 +3,7 @@ An experiment on building a docker image for an Oracle Standby Database using Va
 
 ## Prerequisites
 
-You should have installed
-
-- [Vagrant](https://www.vagrantup.com/)
-- [Docker](https://www.docker.com/)
-
+You should have installed [Docker](https://www.docker.com/) and optionally [Vagrant](https://www.vagrantup.com/)
 If you are on Windows or want to use a proxy VM for the Docker host, additionally have [VirtualBox](https://www.virtualbox.org/) installed
 
 ### Oracle 12cR1
@@ -37,15 +33,17 @@ and
 
 to follow the installation process.
 
-
 ## How to build
+
+After running the container you could use `docker commit` to create a docker image.
+
+Alternatively, use the `Dockerfile` way:
 
 1. Start a local http server in `./install` for the downloaded Oracle installation archives, e.g. using [Python](http://stackoverflow.com/questions/26692708/how-to-add-a-file-to-an-image-in-dockerfile-without-using-the-add-or-copy-direct)
         python3 -m http.server --bind <address> 8000
-where `address` is your primary ip4. My primary way to get my current ip scripted is
+where `address` is your primary ip4. My favorite way to get the current ip scripted is
         ip route get 8.8.8.8 | awk '{print $NF; exit}
 2. Adjust `BASEURL` in `./docker/Dockerfile` to match your host ip.
-
 3. Then, on the command line, cd into `./build` and type
         docker build -t wkoertgen/train.docker.dataguard .
 Alternatively use Vagrant, e.g.
