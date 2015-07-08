@@ -21,11 +21,11 @@ If you are on Windows or want to use a proxy VM for the Docker host, additionall
 
 1. Start a local http server in `./install` for the downloaded Oracle installation archives, e.g. using [Python](http://stackoverflow.com/questions/26692708/how-to-add-a-file-to-an-image-in-dockerfile-without-using-the-add-or-copy-direct) or
 
-2. Modify `./docker/Dockerfile` to match your host IP
+2. Modify `./docker/Dockerfile` to match your host IP. For me this is `192.168.2.111`.
 
 3. Then, on the command line type `vagrant up`
 
-### Notes on using Windows
+###-q Notes on using Windows
 
 On Windows, there is no native Docker support. In this case, Vagrant automatically spins up a proxy VM, defaulting to [boot2docker](https://github.com/mitchellh/boot2docker-vagrant-box). However, this default VM lacks support for synced folders, except `rsync`. We therefore customized the proxy VM to [phusion/ubuntu-14.04-amd64](https://atlas.hashicorp.com/phusion/boxes/ubuntu-14.04-amd64).
 
