@@ -40,11 +40,19 @@ After running the container you could use `docker commit` to create a docker ima
 Alternatively, use the `Dockerfile` way:
 
 1. Start a local http server in `./install` for the downloaded Oracle installation archives, e.g. using [Python](http://stackoverflow.com/questions/26692708/how-to-add-a-file-to-an-image-in-dockerfile-without-using-the-add-or-copy-direct)
+
         python3 -m http.server --bind <address> 8000
+        
 where `address` is your primary ip4. My favorite way to get the current ip scripted is
+
         ip route get 8.8.8.8 | awk '{print $NF; exit}
+        
 2. Adjust `BASEURL` in `./docker/Dockerfile` to match your host ip.
+
 3. Then, on the command line, cd into `./build` and type
+
         docker build -t wkoertgen/train.docker.dataguard .
+        
 Alternatively use Vagrant, e.g.
+
         vagrant up
