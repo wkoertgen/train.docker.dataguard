@@ -16,7 +16,7 @@ If you are on Windows or want to use a proxy VM for the Docker host, additionall
 
 ## How to run
 
-Using docker, simply run `run.sh` (Linux) or `run.bat` (Windows).
+Using docker, simply run `./run.sh` (Linux) or `run.bat` (Windows).
 Alternatively, using Vagrant, type `vagrant up` and `docker logs -f oracle12c` to follow the installation process.
 
 ## How to build
