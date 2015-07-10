@@ -4,7 +4,8 @@ An experiment on building a docker image for an Oracle Standby Database using Va
 ## Prerequisites
 
 You should have installed [Docker](https://www.docker.com/) and optionally [Vagrant](https://www.vagrantup.com/)
-If you are on Windows or want to use a proxy VM for the Docker host, additionally have [VirtualBox](https://www.virtualbox.org/) installed
+
+If you are on Windows or want to use a proxy VM for the Docker host, additionally have [VirtualBox](https://www.virtualbox.org/) and/or [boot2docker](http://boot2docker.io/) installed.
 
 ### Oracle 12cR1
 
@@ -15,14 +16,7 @@ If you are on Windows or want to use a proxy VM for the Docker host, additionall
 
 ## How to run
 
-Using native docker, simply run
-
-    docker run -it --name="oracle12c" \
-    -v $PWD/install:/tmp \
-    -w /tmp \
-    breed85/oracle-12c \
-    /bin/bash -ci ./setup.sh
-
+Using docker, simply run `run.sh` (Linux) or `run.bat` (Windows).
 Alternatively, using Vagrant, type `vagrant up` and `docker logs -f oracle12c` to follow the installation process.
 
 ## How to build
