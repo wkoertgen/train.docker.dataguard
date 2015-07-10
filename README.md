@@ -40,3 +40,11 @@ Alternatively, use the `Dockerfile` way to build a docker image:
         docker build -t wkoertgen/train.docker.dataguard .
         
 	Alternatively use Vagrant, e.g. `vagrant up`
+
+## FAQ
+
+1. **Q:** Running `run.bat` on Windows i get 
+
+		bash: ./setup.sh: No such file or directory
+
+	**A:** On windows, a current limitation of `boot2docker` seems to be that [mounting works only for locations beneath `c:\users\`](http://superuser.com/questions/903193/mounting-a-directory-from-the-host-in-boot2docker-for-windows). As a workaround clone/move this repository into a directory beneath your `%USERPROFILE%` and you should be good to go. 
