@@ -26,5 +26,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # auto install docker
   config.vm.provision "docker"
-	
+
+  # Disable synced folders (prevents an NFS error on "vagrant up")
+  config.vm.synced_folder ".", "/vagrant", disabled: true	
 end

@@ -16,7 +16,7 @@ Vagrant.configure(2) do |config|
     d.name = 'oracle12c-container'
     d.vagrant_vagrantfile = "host/Vagrantfile"
 
-    d.image = "breed85/oracle-12c"
+    d.image = "oraclelinux:7.1"
     d.volumes = [__dir__+"/install:/tmp"]
     d.create_args = ["-w", "/tmp"]
     d.cmd = ["/bin/bash", "-ci", "./setup.sh"]
