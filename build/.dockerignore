@@ -1,5 +1,2 @@
 ./docker.session
 ./*.log
-./install/*
-#./primary/*
-./*.md
