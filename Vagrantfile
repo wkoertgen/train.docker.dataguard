@@ -15,7 +15,7 @@ Vagrant.configure(2) do |config|
   config.vm.provider "docker" do |d|
     d.name = 'oracle12c-container'
     d.vagrant_vagrantfile = "host/Vagrantfile"
-
+    d.has_ssh = true
     d.image = "oraclelinux:7.1"
     d.volumes = [__dir__+"/install:/tmp"]
     d.create_args = ["-w", "/tmp"]
