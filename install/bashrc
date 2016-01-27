@@ -1,0 +1,14 @@
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+# User specific aliases and functions
+alias s+="sqlplus / as sysdba"
+alias ll="ls -ltr"
+alias dbs="cd $ORACLE_HOME/dbs"
+alias tns="cd $ORACLE_HOME/network/admin"
+alias data="cd $ORACLE_BASE/oradata"
+alias vfalert="tail -100f $ORACLE_BASE/diag/rdbms/$ORACLE_SID/$ORACLE_SID/trace/alert_$ORACLE_SID.log"

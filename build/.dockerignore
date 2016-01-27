@@ -1,3 +1,5 @@
-.gitignore
-.vagrant
-Vagrantfile
+./docker.session
+./*.log
+./install/*
+#./primary/*
+./*.md

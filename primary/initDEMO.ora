@@ -1,0 +1,19 @@
+audit_file_dest='/u01/app/oracle/admin/DEMO/adump'
+audit_trail='db'
+compatible='12.1.0.2.0'
+control_files='/u01/app/oracle/oradata/DEMO/control01.ctl','/u01/app/oracle/fast_recovery_area/DEMO/control02.ctl'
+db_block_size=8192
+db_domain=''
+db_name='DEMO'
+db_recovery_file_dest='/u01/app/oracle/fast_recovery_area'
+db_recovery_file_dest_size=4560m
+diagnostic_dest='/u01/app/oracle'
+dispatchers='(PROTOCOL=TCP) (SERVICE=DEMOXDB)'
+open_cursors=300
+pga_aggregate_target=200m
+processes=300
+remote_login_passwordfile='EXCLUSIVE'
+sga_target='1G'
+undo_tablespace='UNDOTBS1'
+dg_broker_start=true
+
