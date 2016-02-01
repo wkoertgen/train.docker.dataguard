@@ -51,3 +51,4 @@ fi
 
 # cleanup
 rm -Rf /oracle/install
+rm -Rf /tmp/*
