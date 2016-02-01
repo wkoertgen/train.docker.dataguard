@@ -1,10 +1,10 @@
 # Frequently Asked Questions
 ## 1. The Challenge - why do we accept it ?
-Setup and maintain Data Guard installations in development and productive environments was and still is a challenging task, which comprises creating Physical or Logical Standby Databases, Redo Transport Services, Apply Services, Role Transitions, etc. - after all very complex configurations. To get familiar with the conecpts see [Dataguard Concepts](ocs.oracle.com/database/121/SBYDB/toc.htm) 
+Setup and maintain Data Guard installations in development and productive environments was and still is a challenging task, which comprises creating Physical or Logical Standby Databases, Redo Transport Services, Apply Services, Role Transitions, etc. - very complex configurations, after all. To get familiar with the concepts see [Data Guard Concepts](http://docs.oracle.com/database/121/SBYDB/toc.htm) 
 
-We will come back to Concepts and details later.
+We will come back to concepts and details later.
 
-Considering this, it is clear that we cannot simply create one Dockerfile and that's it, but rather are compelled to play with different images and different containers simultaneously. In this project, at the end there shall emerge one single image of a Physical Standby Database, which can serve as a fully productive template for arbitrary databases.
+Considering this, it is clear that we cannot simply create one Dockerfile and that's it, but rather are compelled to play with different images and different containers simultaneously. In this project, at the end, there shall emerge one single image of a Physical Standby Database, which can serve as a fully productive template for arbitrary productive primary databases.
 
 We are not quite sure, if we can achieve all this. But even the approximation would have multiple benefits for developers, database administrators and above all for students, because it happens inside Docker images and containers, which can be thrown away in case of errors, or saved and combined one with another rather arbitrarily. After all, we want to enable people to train Data Guard on affordable platforms.
 
@@ -12,13 +12,13 @@ We are not quite sure, if we can achieve all this. But even the approximation wo
 
 NOTE the branch **develop** where we try to get around with the basic steps. 
 
-### Step 1:
+#### Step 1:
 docker build -f DF_Oracle12c -t oraclelinux:oracle12c . | tee DF_Oracle12c.log
 
-### Step 2:
+####Step 2:
 docker build -f DF_CreatePrimary -t oraclelinux:primary . | tee DF_CreatePrimary.log
 
-### Step 3:
+#### Step 3:
 docker build -f DF_CreateStandby -t oraclelinux:oracle12c . | tee DF_CreateStandby.log
 
 ## 3. Permissions on scripts
@@ -27,9 +27,9 @@ Consider these lines in  the dockerfile DF_Oracle12
 	ADD ./install/* /tmp/
 	RUN cd /tmp && ./oracle12c-install.sh
 
-The docker server copies the contents of the **subdirectory ./install**  to /tmp and tries to execute the scripts **oracle12c-install.sh** Remember: docker only obeys to his master's voice which is root.
+The ADD instruction tells the docker server to copy the contents of the **subdirectory ./install**  to /tmp of the image to be built just now.  The RUN instruction tries to execute the script **oracle12c-install.sh.** Remember, that docker only obeys to his master's voice, which is root.
 
-The docker client is run by another user - here named hwk. See the contents of the subdirectory:
+Unfortunately the docker client is run by another user - here named hwk. See the contents of the subdirectory:
 
 	hwk@Thinkpad4:~/git/train.docker.dataguard/build/install$ ll
 	total 2625116
@@ -52,13 +52,13 @@ The docker client is run by another user - here named hwk. See the contents of t
 	./*.log
 	#./install/*
 	
-The last line is commented, otherwise the docker server would not take notice of the **subdirectory install** After the installation of the Oracle software we do not need it anymore, we uncomment it then.  If we would drop this line at all, then the docker client would send the complete subdirectory install to the docker server - some 3 GB compressed - in every next build process. Our images wil grow unnecessarily.  See here the sizes of of uncompressed Orace software.
+The last line is commented, otherwise the docker server would not take notice of the **subdirectory install.** After the installation of the Oracle software, we do not need it anymore, we uncomment it then.  If we would drop this line at all, then the docker client would **send the complete subdirectory install** to the docker server - some 3 GB compressed - in every next build process. Our images would grow unnecessarily.  See here the sizes of of uncompressed Orace software:
 
 	REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
 	oraclelinux         oracle12c           d6915659544b        45 minutes ago      8.955 GB
 	oraclelinux         7.2                 0e739c7463a3        8 weeks ago         206 MB
 
 
-This is a bit clumpsy due to docker's actual philisophy, assuming that there is only **the one Dockerfile**, consequently **only one .dockerignore.** 
+This is a bit clumpsy due to docker's actual philisophy assuming, that there is only **the one Dockerfile**, consequently **only one .dockerignore.** 
 
 
