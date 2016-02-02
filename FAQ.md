@@ -80,7 +80,8 @@ Consider the our **listener.ora** or  **tnsnames.ora**
 	
 	ADR_BASE_LISTENER = /oracle
 
-Guess what the docker server does when it coresolves **localhost**. Bingo, it takes the **container name** - look here the logfile:
+Guess what the docker server does when it resolves **localhost.** Bingo, it takes the **container name.** 
+Look here the logfile:
 
 	Starting /u01/app/oracle/product/12.1.0/bin/tnslsnr: please wait...
 	
