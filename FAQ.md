@@ -110,7 +110,9 @@ Look here the logfile:
 	 ---> a18e727fc5d4
 	Removing intermediate container 9e79e1a462fa
 
-Keep in mind, that docker adds a **filesystem layer ** every time when it finds instructions like ADD, RUN or CMD  in the dockerfile. For the execution it starts an **intermediate container** and updates the **/etc/hosts**. Very smart. See question 7.
+Keep in mind, that docker adds a **filesystem layer** every time when it finds instructions like ADD, RUN or CMD  in the dockerfile. For the execution it starts an **intermediate container** and updates the **/etc/hosts.**
+
+Very smart. See question 7.
 
 ## 6. Handling Oracle Network in arbitrary containers
 What happens, when we start a container with the newly created image ...
