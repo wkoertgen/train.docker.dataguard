@@ -52,13 +52,119 @@ Unfortunately the docker client is run by another user - here named hwk. See the
 	./*.log
 	#./install/*
 	
-The last line is commented, otherwise the docker server would not take notice of the **subdirectory install.** After the installation of the Oracle software, we do not need it anymore, we uncomment it then.  If we would drop this line at all, then the docker client would **send the complete subdirectory install** to the docker server - some 3 GB compressed - in every next build process. Our images would grow unnecessarily.  See here the sizes of of uncompressed Orace software:
+The last line is commented, otherwise the docker server would not take notice of the **subdirectory install.** After the installation of the Oracle software, we do not need it anymore, we uncomment it then.  If we would drop this line at all, then the docker client would **send the complete subdirectory install** to the docker server - some 3 GB compressed - in every next build process. Our images would grow unnecessarily.  See here the sizes of the images. NOTE: oraclelinux + packages required for the installation of Oracle software comes to 758 MB, the rest is used for Oracle12c R1 Enterprise Eidtion.
 
 	REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
 	oraclelinux         oracle12c           d6915659544b        45 minutes ago      8.955 GB
 	oraclelinux         7.2                 0e739c7463a3        8 weeks ago         206 MB
 
 
-This is a bit clumpsy due to docker's actual philisophy assuming, that there is only **the one Dockerfile**, consequently **only one .dockerignore.** 
+This handling of the .dockerignore is a bit clumpsy due to docker's actual philisophy assuming, that there is only **the one Dockerfile**, consequently **only one .dockerignore.** 
+
+## 5. Handling Oracle Network during the build process
+Consider the our **listener.ora** or  **tnsnames.ora**
+
+	LISTENER_DEMO =
+	  (DESCRIPTION =
+	    (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521))
+	  )
+	
+	SID_LIST_LISTENER_DEMO =
+	  (SID_LIST =
+	    (SID_DESC =
+	      (GLOBAL_DBNAME = demo_DGMGRL )
+	      (ORACLE_HOME = /oracle/product/12.1.0)
+	      (SID_NAME = demo)
+	    )
+	  )
+	
+	ADR_BASE_LISTENER = /oracle
+
+Guess what the docker server does when he resolves **localhost**. Bingo, it takes the **container name** - look here the logfile:
+
+	Starting /u01/app/oracle/product/12.1.0/bin/tnslsnr: please wait...
+	
+	TNSLSNR for Linux: Version 12.1.0.2.0 - Production
+	System parameter file is /u01/app/oracle/product/12.1.0/network/admin/listener.ora
+	Log messages written to /oracle/diag/tnslsnr/54be4c00b8ab/listener/alert/log.xml
+	Listening on: (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=54be4c00b8ab)(PORT=1521)))
+	
+	Connecting to (ADDRESS=(PROTOCOL=tcp)(HOST=)(PORT=1521))
+	STATUS of the LISTENER
+	------------------------
+	Alias                     listener
+	Version                   TNSLSNR for Linux: Version 12.1.0.2.0 - Production
+	Start Date                02-FEB-2016 09:45:05
+	Uptime                    0 days 0 hr. 0 min. 6 sec
+	Trace Level               off
+	Security                  ON: Local OS Authentication
+	SNMP                      OFF
+	Listener Parameter File   /u01/app/oracle/product/12.1.0/network/admin/listener.ora
+	Listener Log File         /oracle/diag/tnslsnr/54be4c00b8ab/listener/alert/log.xml
+	Listening Endpoints Summary...
+	  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=54be4c00b8ab)(PORT=1521)))
+	The listener supports no services
+	The command completed successfully
+	postinstall finished Tue Feb 2 09:45:06 UTC 2016
+	 ---> a18e727fc5d4
+	Removing intermediate container 9e79e1a462fa
+
+Keep in mind, that docker adds a **filesystem layer ** every time when it executes an instruction of the dockerfile. For the execution it starts an **intermediate container** and this is **localhost**. **Very smart**.
+
+## 6. Handling Oracle Network in arbitrary containers
+What happens, when we start a container with the newly created image ...
+
+	REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+	oraclelinux         primary             a18e727fc5d4        20 minutes ago      11.01 GB
+
+by typing 
+	 docker run --rm -it a18e727fc5d4 su - oracle
+
+Of course the same smart replacement of localhost to the container's name:
+
+	Starting /u01/app/oracle/product/12.1.0/bin/tnslsnr: please wait...
+	TNSLSNR for Linux: Version 12.1.0.2.0 - Production
+	System parameter file is /u01/app/oracle/product/12.1.0/network/admin/listener.ora
+	Log messages written to /oracle/diag/tnslsnr/ee4c15a3d5ee/listener/alert/log.xml
+	Listening on: (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=ee4c15a3d5ee)(PORT=1521)))
+	
+	Connecting to (ADDRESS=(PROTOCOL=tcp)(HOST=)(PORT=1521))
+	STATUS of the LISTENER
+	------------------------
+	Alias                     LISTENER
+	Version                   TNSLSNR for Linux: Version 12.1.0.2.0 - Production
+	Start Date                02-FEB-2016 10:08:02
+	Uptime                    0 days 0 hr. 0 min. 4 sec
+	Trace Level               off
+	Security                  ON: Local OS Authentication
+	SNMP                      OFF
+	Listener Parameter File   /u01/app/oracle/product/12.1.0/network/admin/listener.ora
+	Listener Log File         /oracle/diag/tnslsnr/ee4c15a3d5ee/listener/alert/log.xml
+	Listening Endpoints Summary...
+	  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=ee4c15a3d5ee)(PORT=1521)))
+	The listener supports no services
+	The command completed successfully
+
+## 7. The /etc/hosts in docker containers
+Look at the /etc/hosts of the container **ee4c15a3d5ee**
+
+	172.17.0.2	ee4c15a3d5ee
+	127.0.0.1	localhost
+	::1	localhost ip6-localhost ip6-loopback
+	fe00::0	ip6-localnet
+	ff00::0	ip6-mcastprefix
+	ff02::1	ip6-allnodes
+	ff02::2	ip6-allrouters
+
+
+The container's name is the hostname. Try it out with commands like *hostname* or *uname -a*, when you run another container.
+
+We will come back to it when we go to link the containers together.
+
+
+
+
+
+
 
 

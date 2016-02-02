@@ -1,2 +1,16 @@
-LISTENER= (DESCRIPTION= (ADDRESS= (PROTOCOL=tcp)(HOST = DEMO)(PORT=1521)))
+LISTENER_DEMO =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521))
+  )
+
+SID_LIST_LISTENER_DEMO =
+  (SID_LIST =
+    (SID_DESC =
+      (GLOBAL_DBNAME = demo_DGMGRL )
+      (ORACLE_HOME = /oracle/product/12.1.0)
+      (SID_NAME = demo)
+    )
+  )
+
+ADR_BASE_LISTENER = /oracle
 
