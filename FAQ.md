@@ -19,7 +19,7 @@ docker build -f DF_Oracle12c -t oraclelinux:oracle12c . | tee DF_Oracle12c.log
 docker build -f DF_CreatePrimary -t oraclelinux:primary . | tee DF_CreatePrimary.log
 
 #### Step 3:
-docker build -f DF_CreateStandby -t oraclelinux:oracle12c . | tee DF_CreateStandby.log
+docker build -f DF_CreateStandby -t oraclelinux:standby . | tee DF_CreateStandby.log
 
 ## 3. Permissions on scripts
 Consider these lines in  the dockerfile DF_Oracle12
