@@ -80,7 +80,7 @@ Consider the our **listener.ora** or  **tnsnames.ora**
 	
 	ADR_BASE_LISTENER = /oracle
 
-Guess what the docker server does when he resolves **localhost**. Bingo, it takes the **container name** - look here the logfile:
+Guess what the docker server does when it coresolves **localhost**. Bingo, it takes the **container name** - look here the logfile:
 
 	Starting /u01/app/oracle/product/12.1.0/bin/tnslsnr: please wait...
 	
@@ -109,7 +109,7 @@ Guess what the docker server does when he resolves **localhost**. Bingo, it take
 	 ---> a18e727fc5d4
 	Removing intermediate container 9e79e1a462fa
 
-Keep in mind, that docker adds a **filesystem layer ** every time when it executes an instruction of the dockerfile. For the execution it starts an **intermediate container** and this is **localhost**. **Very smart**.
+Keep in mind, that docker adds a **filesystem layer ** every time when it finds instructions like ADD, RUN or CMD  in the dockerfile. For the execution it starts an **intermediate container** and updates the **/etc/hosts**. Very smart. See question 7.
 
 ## 6. Handling Oracle Network in arbitrary containers
 What happens, when we start a container with the newly created image ...

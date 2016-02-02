@@ -17,6 +17,7 @@ su - oracle -c "mkdir -p $ORACLE_HOME/dbs"
 su - oracle -c "cp /tmp/listener.ora $ORACLE_HOME/network/admin/listener.ora"
 su - oracle -c "cp /tmp/tnsnames.ora $ORACLE_HOME/network/admin/tnsnames.ora"
 su - oracle -c "cp /tmp/initDEMO.ora $ORACLE_HOME/dbs"
+su - oracle -c "cd $ORACLE_HOME/dbs; orapwd file=orapwdemo password=oracle_4U"
 
 su - oracle  -c "$ORACLE_HOME/bin/dbca \
 -silent  \
@@ -35,6 +36,7 @@ su - oracle  -c "$ORACLE_HOME/bin/dbca \
 if [[ $? != "0" ]]; then echo "ERROR in demo.sh - aborting setup"; exit; fi
 
 su oracle -c "$ORACLE_HOME/bin/sqlplus / as sysdba << EOF
+alter user system identified by oracle_4U;
 alter system set dg_broker_start = true scope=spfile;
 shutdown immediate;
 startup mount;
@@ -45,16 +47,11 @@ EOF"
 
 if [[ $? != "0" ]]; then echo "ERROR in demo.sh - aborting setup"; exit; fi
 
+# /etc/oratab
+cp -f /tmp/oratab /etc/oratab
+chown oracle:oinstall /etc/oratab
+chmod 0644 /etc/oratab
 
-# listener.ora & tnsnames.ora
-#echo Installing listener.ora and tnsnames.ora 
-#mkdir -p /var/opt/oracle 
-#chown oracle:oinstall /var/opt/oracle
-#chmod 766 /var/opt/oracle 
-#cp /tmp/listener.ora /var/opt/oracle
-#cp /tmp/tnsnames.ora /var/opt/oracle
-#chown oracle:oinstall /var/opt/oracle/listener.ora 
-#chown oracle:oinstall /var/opt/oracle/tnsnames.ora
 
 # start listener
 echo Starting listener 
