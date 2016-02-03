@@ -46,20 +46,55 @@ Unfortunately the docker client is run by another user - here named hwk. See the
 
 **NOTE -rw-rw-r-x 1 hwk hwk       1559 Feb  1 18:55 oracle12c-install.sh*** 
 
-## 4. The file **.dockerignore**
+## 4. The file **.dockerignore** 
+It serves to increase build's performance - see [Dockerfile and .dockerignore](https://docs.docker.com/engine/reference/builder/) 
 
-	./docker.session
+	./build_images.sh
 	./*.log
-	#./install/*
-	
-The last line is commented, otherwise the docker server would not take notice of the **subdirectory install.** After the installation of the Oracle software, we do not need it anymore, we uncomment it then.  If we would drop this line at all, then the docker client would **send the complete subdirectory install** to the docker server - some 3 GB compressed - in every next build process. Our images would grow unnecessarily.  See here the sizes of the images. NOTE: oraclelinux + packages required for the installation of Oracle software comes to 758 MB, the rest is used for Oracle12c R1 Enterprise Eidtion.
+	./install/*
+	./primary/*
+	./standby/*
+	./.gitignore
+	./DF*
+
+This .**dockerignore** would exclude all subdirectories, but this is not want we want. We want to include one subdirectory at a time and to exclude the others, because the client sends the **context** completely to the server. The subdirectory install e.g. has some 3G compressed data and we need it only for the Oracle installation. We must exclude it afterwards, otherwise the docker client would **send the complete subdirectory install** to the docker server in every next build process. Our images would grow unnecessarily.  See here the sizes of the images. NOTE: oraclelinux + packages required for the installation of Oracle software comes to 758 MB, the rest is used for Oracle12c R1 Enterprise Eidtion.
 
 	REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
 	oraclelinux         oracle12c           d6915659544b        45 minutes ago      8.955 GB
 	oraclelinux         7.2                 0e739c7463a3        8 weeks ago         206 MB
 
+To update the .dockerignore manually is a bit clumpsy due to docker's actual philisophy assuming, that there is only **the one Dockerfile**, consequently **only one .dockerignore.** To make a bit more elegant, we have added a little script *updignore.sh* 
+	
+	PAT="$1"
+	MODE="$2"
+	FILE=./.dockerignore
+	
+	if [[ "$MODE" == "uncomment" ]]
+	then 
+	sed -e 's/^#\.\/'$PAT'/\.\/'$PAT'/' $FILE > .x
+	mv .x $FILE
+	cat $FILE
+	fi
+	
+	if [[ "$MODE" == "comment" ]]
+	then
+	sed 's/\.\/'$PAT'/#\.\/'$PAT'/' $FILE > .x
+	mv .x $FILE
+	cat $FILE
+	fi
 
-This handling of the .dockerignore is a bit clumpsy due to docker's actual philisophy assuming, that there is only **the one Dockerfile**, consequently **only one .dockerignore.** 
+It is called by the script *build_images.sh*
+
+	./updignore.sh install comment
+	docker build -f DF_Oracle12c -t oraclelinux:oracle12c . | tee DF_Oracle12c.log
+	./updignore.sh install uncomment
+	./updignore.sh primary comment
+	docker build -f DF_CreatePrimary -t oraclelinux:primary . | tee DF_CreatePrimary.log
+	./updignore.sh primary uncomment
+	./updignore.sh standby comment
+	docker build -f DF_CreateStandby -t oraclelinux:standby . | tee DF_CreateStandby.log
+	./updignore.sh standby uncomment
+
 
 ## 5. Handling Oracle Network during the build process
 Consider the our **listener.ora** or  **tnsnames.ora**
