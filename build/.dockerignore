@@ -1,2 +1,7 @@
-./docker.session
+./build_images.sh
 ./*.log
+./install/*
+./primary/*
+./standby/*
+./.gitignore
+./DF*
