@@ -201,7 +201,7 @@ We will come back to it when we go to link the containers together.
 
 
 ## 8. Standby Scenarios
-There are basically two types of scenarios, the traditional **Backup-Based Duplication** and more recent **Active Database Duplication**.   We have tested succesfully our scripts between physical hosts, but failed between linked docker containers, because they need a duplex connection. This would require advanced features like Docker Composer or Docker Machines or alike. 
+There are basically two types of scenarios, the traditional **Backup-Based Duplication** and more recent **Active Database Duplication**.   We prefer the active duplication and have tested succesfully our scripts between physical hosts, but failed between linked docker containers, because in this scenario they need a duplex connection. This would require advanced features like Docker Composer or Docker Machines or alike. 
 
 This is a training - project for Data Guard, hence we are bound to work with the **"every day Docker".** Some people suggested a *quick and dirty way* on **boot2docker**, which publishes the port of the standby container to the host -  ** -p option** - and links the containers with **easy-connect** via the host.  That means, that the IP address of the user's host must manually inserted in every net-command. Hence we cannot automate this method. 
 
