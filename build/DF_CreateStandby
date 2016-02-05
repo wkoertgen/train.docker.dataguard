@@ -1,0 +1,6 @@
+FROM oraclelinux:oracle12c
+MAINTAINER it.koertgen@gmail.com
+
+# Context
+ADD ./standby/* /tmp/
+RUN cd /tmp && ./standby.sh

@@ -200,6 +200,15 @@ The container's name is the hostname. Try it out with commands like *hostname* o
 We will come back to it when we go to link the containers together.
 
 
+## 8. Standby Scenarios
+There are basically two types of scenarios, the traditional **Backup-Based Duplication** and more recent **Active Database Duplication**.   We have tested succesfully our scripts between physical hosts, but failed between linked docker containers, because they need a duplex connection. This would require advanced features like Docker Composer or Docker Machines or alike. 
+
+This is a training - project for Data Guard, hence we are bound to work with the **"every day Docker".** Some people suggested a *quick and dirty way* on **boot2docker**, which publishes the port of the standby container to the host -  ** -p option** - and links the containers with **easy-connect** via the host.  That means, that the IP address of the user's host must manually inserted in every net-command. Hence we cannot automate this method. 
+
+Finally we made up our minds to try the Backup-Based Duplication. The dockerfile **DF_CreateStandby** refers to scripts in the **subdirectory standby**, which just create an image with a **prepared physical database**. From then on we work with two docker containers.
+
+
+
 
 
 
