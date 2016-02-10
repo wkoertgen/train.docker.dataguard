@@ -1,0 +1,5 @@
+run {
+allocate channel prmy1 type disk;
+allocate auxiliary channel stby type disk;
+duplicate target database for standby from active database;
+}

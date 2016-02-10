@@ -1,0 +1,64 @@
+# steps
+1. docker pull oraclelinux:latest
+2. docker run -it --name preinstall  -v $PWD:/tmp -w /tmp oraclelinux:latest /bin/bash preinstall.sh > preinstall.log 2>&1
+2. docker run -it --name mypreinstall  -v $PWD:/tmp -w /tmp oraclelinux:latest /bin/bash mypreinstall.sh > mypreinstall.log 2>&1
+2a. commit preinstall oraclelinux:preinstall
+3. docker run -it --name install -v $PWD:/tmp -w /tmp oraclelinux:preinstall /bin/bash /tmp/scripts/oracle12c-install.sh
+3a. commit install oraclelinx:install
+# just to inspect
+4. docker run -it --name install --rm -v $PWD:/tmp -w /tmp oraclelinux:latest /bin/bash
+5. docker run -it --name "DEMO" -h "DEMO" -v $PWD:/tmp -w /tmp  oraclelinux:preinstal /bin/bash /tmp/scripts/setup_12102.sh
+    installs unzip, unzips linuxamd64_12102_database_1of2.zip, linuxamd64_12102_database_2f2.zip
+2.1  calls oracle12c-install.sh:
+	which starts runInstaller, which installs Oracle SW in the container under /oracle/install, which is later cleaned up
+2.2  calls demo.sh: creates database DEMO
+
+
+
+#
+docker run -it --name "DEMO" -h "DEMO" -v $PWD:/tmp -w /tmp   oraclelinux:install /bin/bash /tmp/scripts/demo.sh
+# restart killed die datenbank und den listener 
+#docker run --restart=always -it --name "DEMO" -h "DEMO" -v $PWD:/tmp -p 11521:1521 breed85/oracle-12c:12102 /bin/bash /tmp/scripts/startDEMO.sh
+
+# start DEMO first, startup listener + DB
+docker run -it --rm \
+-h "DEMO" --name "DEMO" \
+-v $PWD:/tmp \
+-p 11521:1521 \
+oraclelinux:primary \
+su - oracle
+
+# alternative
+docker run -it --rm \
+-h "DEMO" --name "DEMO" \
+-v $PWD:/tmp \
+oraclelinux:primary \
+su - oracle
+
+
+# start DEMO_SBY in other session
+docker run -it --rm \
+--name "DEMO_SBY" \
+-h "DEMO_SBY" \
+--link="DEMO" \
+-p 11522:1521 \
+-v $PWD:/tmp \
+-w /tmp \
+oraclelinux:oracle12c \
+su - oracle
+
+# aternative
+
+docker run -it --rm \
+--name "DEMO_SBY" \
+-h "DEMO_SBY" \
+--link="DEMO" \
+-v $PWD:/tmp \
+-w /tmp \
+oraclelinux:oracle12c \
+su - oracle
+
+# automatisiert funktioniert das nicht stabil
+docker run --restart=always -it --name "DEMO_SBY" -h "DEMO_SBY" -p 11522:1521 -v $PWD:/tmp breed85/oracle-12c:12102 su - oracle /tmp/scripts/setup_dataguard.sh
+
+

@@ -1,0 +1,38 @@
+Script started on Do 05 Nov 2015 16:51:34 CET
+oracle@Thinkpad4: oracle@Thinkpad4:~$ dgmrl sys/oracle@demo
+DGMGRL for Linux: Version 12.1.0.2.0 - 64bit Production
+
+Copyright (c) 2000, 2013, Oracle. All rights reserved.
+
+Welcome to DGMGRL, type "help" for information.
+Connected as SYSDBA.
+DGMGRL> create configuration dgdemo as primary database is demo connect identifier is demo;
+Configuration "dgdemo" created with primary database "demo"
+DGMGRL> add database demosby1 as connect identifier is demsby1 maintained as physical;
+^CError: 
+ORA-01013: user requested cancel of current operation
+
+DGMGRL> add database demosby1 as connect identifier is demosby1 maintained as physical;
+Database "demosby1" added
+DGMGRL> show configuration;
+
+Configuration - dgdemo
+
+  Protection Mode: MaxPerformance
+  Members:
+  demo     - Primary database
+    demosby1 - Physical standby database 
+
+Fast-Start Failover: DISABLED
+
+Configuration Status:
+DISABLED
+
+DGMGRL> enable configuration;
+Enabled.
+DGMGRL> enable database demsby1;
+Object "demsby1" was not found
+DGMGRL> enable database demosby1;
+Enabled.
+DGMGRL> exit
+Script done on Do 05 Nov 2015 16:58:50 CET
